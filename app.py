@@ -1,5 +1,7 @@
 import logging
 import gspread
+import os
+import json
 from oauth2client.service_account import ServiceAccountCredentials
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler
@@ -9,6 +11,9 @@ TOKEN = "8413434299:AAHy9DsgSJQXI6v5Ga2IYMeXPe6Cub-c8hg"
 SPREADSHEET_NAME = "for_an_interview"
 SHEET_NAME = "Задача 3"
 
+google_creds_json = os.getenv("GOOGLE_CREDENTIALS")
+google_creds_dict = json.loads(google_creds_json)
+
 # === Логирование ===
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -17,7 +22,7 @@ logging.basicConfig(
 
 # === Google Sheets подключение ===
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(google_creds_dict, scope)
 client = gspread.authorize(creds)
 
 # === Состояния для ConversationHandler ===
